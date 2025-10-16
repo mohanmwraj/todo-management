@@ -5,6 +5,7 @@ import com.example.todo_management.entity.Todo;
 import com.example.todo_management.repository.TodoRepository;
 import com.example.todo_management.service.TodoService;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,29 +15,32 @@ import java.util.List;
 public class TodoServiceImpl implements TodoService {
 
     private TodoRepository todoRepository;
-    //private ModelMapper modelMapper;
+
+    private ModelMapper modelMapper;
 
     @Override
     public TodoDto addTodo(TodoDto todoDto) {
 
         //Convert todoDto into Todo JPA Entity
-        Todo todo = new Todo();
-        todo.setTitle(todoDto.getTitle());
-        todo.setDescription(todoDto.getDescription());
-        todo.setCompleted(todoDto.isCompleted());
+//        Todo todo = new Todo();
+//        todo.setTitle(todoDto.getTitle());
+//        todo.setDescription(todoDto.getDescription());
+//        todo.setCompleted(todoDto.isCompleted());
+
+        Todo todo = modelMapper.map(todoDto, Todo.class);
 
         //Todo JPA Entity
         Todo savedTodo = todoRepository.save(todo);
 
         //Convert saved todo JPA entity object into TodoDto object
-        TodoDto savedDto = new TodoDto();
+//        TodoDto savedDto = new TodoDto();
+//
+//        savedDto.setId(savedTodo.getId());
+//        savedDto.setTitle(savedTodo.getTitle());
+//        savedDto.setDescription(savedTodo.getDescription());
+//        savedDto.setCompleted(savedTodo.isCompleted());
 
-        savedDto.setId(savedTodo.getId());
-        savedDto.setTitle(savedTodo.getTitle());
-        savedDto.setDescription(savedTodo.getDescription());
-        savedDto.setCompleted(savedTodo.isCompleted());
-
-        return savedDto;
+        return modelMapper.map(savedTodo, TodoDto.class);
     }
 
     @Override
