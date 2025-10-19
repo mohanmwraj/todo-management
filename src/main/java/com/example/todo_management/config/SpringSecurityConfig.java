@@ -1,5 +1,8 @@
 package com.example.todo_management.config;
 
+import com.example.todo_management.security.JwtAuthenticationEntryPoint;
+import com.example.todo_management.security.JwtAuthenticationFilter;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -16,10 +19,16 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableMethodSecurity
+@AllArgsConstructor
 public class SpringSecurityConfig {
+
+    private UserDetailsService userDetailsService;
+    private JwtAuthenticationFilter authenticationFilter;
+    private JwtAuthenticationEntryPoint authenticationEntryPoint;
 
     @Bean
     public static PasswordEncoder passwordEncoder(){
@@ -53,7 +62,10 @@ public class SpringSecurityConfig {
                           authorize.anyRequest().authenticated();
                 }).httpBasic(Customizer.withDefaults());
 
+        http.exceptionHandling(exception -> exception
+                .authenticationEntryPoint(authenticationEntryPoint));
 
+        http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
