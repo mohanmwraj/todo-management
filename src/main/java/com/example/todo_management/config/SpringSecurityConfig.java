@@ -49,7 +49,7 @@ public class SpringSecurityConfig {
 
 //                          // GET request make publicly accessible.
                           //authorize.requestMatchers( "/api/**").permitAll();
-
+                         authorize.requestMatchers("/api/auth/**").permitAll();
                           authorize.anyRequest().authenticated();
                 }).httpBasic(Customizer.withDefaults());
 
